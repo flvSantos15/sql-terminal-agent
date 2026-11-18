@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "seed": "node src/seed.js",
-    "ingest": "node src/ingets.js"
+    "ingest": "node src/ingest.js"
   },
   "keywords": [],
   "author": "",
