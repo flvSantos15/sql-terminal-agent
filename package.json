@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "seed": "node src/seed.js",
-    "ingest": "node src/ingest.js"
+    "ingest": "node src/ingest.js",
+    "env:setup": "cp .env.example .env.local"
   },
   "keywords": [],
   "author": "",
