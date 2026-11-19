@@ -1,10 +1,8 @@
 import { createInterface } from "node:readline";
 import { styleText } from "node:util";
-import { generateSqlObject } from "./ai.js";
+import { generateSqlObject, generateTextAnswer } from "./ai.js";
 import { createDb } from "./db.js";
 import { DB_NAME } from "./constants.js";
-
-// Parei faltando -11:05 para acabar
 
 const db = createDb(DB_NAME);
 
@@ -25,10 +23,7 @@ rl.on("close", () => {
 });
 
 console.log(
-  styleText(
-    ["bold", "cyan"],
-    "Bem-vindo ao SQL Terminal Agent! Precione o CTRL + C para sair",
-  ),
+  styleText("\nBem-vindo ao SQL Terminal Agent! Precione o CTRL + C para sair"),
 );
 while (true) {
   const question = await prompt(styleText(["bold", "magenta", "Pergunta: "]));
@@ -50,9 +45,17 @@ while (true) {
       styleText(["bold", "green"], "\nDeseja executar? "),
     );
     if (confirm.toLowerCase() === "s") {
-      const result = await db.query(sql);
-      console.log(styleText("green", "\nResultado:"));
-      console.table(result);
+      const result = await db
+        .prepare(sql)
+        .all()
+        .map((row) => ({ ...row }));
+      const answer = await generateTextAnswer({
+        question,
+        sql,
+        rows: result,
+      });
+      console.log(styleText("green", "\nResposta:"));
+      console.log(answer);
     } else {
       console.log(styleText("yellow", "SQL nao executado."));
     }
